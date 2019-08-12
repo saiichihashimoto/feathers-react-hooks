@@ -120,6 +120,28 @@ it('handles app changing', () => {
 	expect(setting).toStrictEqual('new value');
 });
 
+it('wraps app.set exactly once for each app', () => {
+	const app1SetBefore = app.set;
+	const { rerender } = renderHook(() => useSetting(app, 'name'));
+	const app1SetAfter = app.set;
+
+	expect(app1SetBefore).not.toBe(app1SetAfter);
+
+	const firstApp = app;
+	app = feathers();
+	const app2SetBefore = app.set;
+	rerender();
+	const app2SetAfter = app.set;
+
+	expect(app2SetBefore).not.toBe(app2SetAfter);
+
+	app = firstApp;
+	rerender();
+	const app1SetAfterAgain = app.set;
+
+	expect(app1SetAfter).toBe(app1SetAfterAgain);
+});
+
 it('useDebugValue', () => {
 	jest.spyOn(React, 'useDebugValue');
 
