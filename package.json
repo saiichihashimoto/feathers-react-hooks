@@ -1,0 +1,52 @@
+{
+  "name": "feathers-react-hooks",
+  "version": "0.0.0-development",
+  "description": "react hooks for use with feathersjs",
+  "keywords": [
+    "feathers",
+    "feathersjs",
+    "hook",
+    "react"
+  ],
+  "homepage": "https://saiichihashimoto.github.io/feathers-react-hooks/",
+  "bugs": {
+    "url": "https://github.com/saiichihashimoto/feathers-react-hooks/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/saiichihashimoto/feathers-react-hooks.git"
+  },
+  "license": "MIT",
+  "files": [
+    "lib"
+  ],
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "babel src --out-dir lib --source-maps --delete-dir-on-start --verbose --ignore \"**/*.spec.js\"",
+    "test": "jest --verbose $(if [ -z ${CI+x} ]; then echo --watch; else echo --color --coverage; fi)"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "eslintConfig": {
+    "extends": "saiichihashimoto"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.5.5",
+    "@babel/core": "7.5.5",
+    "@babel/preset-env": "7.5.5",
+    "cz-conventional-changelog": "3.0.2",
+    "eslint-config-saiichihashimoto": "2.0.26",
+    "husky": "3.0.3",
+    "jest": "24.8.0",
+    "lint-my-app": "3.7.4"
+  },
+  "engines": {
+    "node": "12.6.0"
+  }
+}

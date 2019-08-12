@@ -1,0 +1,11 @@
+_extends: .github
+repository:
+  name: feathers-react-hooks
+  description: react hooks for use with feathersjs
+  homepage: https://saiichihashimoto.github.io/feathers-react-hooks/
+  topics: feathers, feathersjs, hook, react
+branches:
+  - name: master
+    protection:
+      required_status_checks:
+        contexts: ['Semantic Pull Request', 'WIP', 'continuous-integration/travis-ci', 'coverage/coveralls']
