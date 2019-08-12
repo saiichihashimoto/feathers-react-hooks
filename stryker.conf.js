@@ -7,6 +7,7 @@ module.exports = (config) => {
 			'!{src,lib}/**/*+(Spec|Test).js?(x)',
 			// Would prefer these as a comment in the files, but that's not possible
 			'!src/constants.js',
+			'!src/hooks.js',
 		],
 		mutator:          'javascript',
 		packageManager:   'npm',
@@ -17,7 +18,7 @@ module.exports = (config) => {
 		thresholds:       {
 			high:  80,
 			low:   60,
-			break: 79.06,
+			break: 79.99,
 		},
 	});
 };
