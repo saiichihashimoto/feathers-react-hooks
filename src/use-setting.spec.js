@@ -21,7 +21,7 @@ it('uses default value', () => {
 	expect(setting).toStrictEqual('default value');
 });
 
-it('uses default valueas function', () => {
+it('uses default value as function', () => {
 	const { result } = renderHook(() => useSetting(app, 'name', () => 'default value'));
 	const { current:[setting] } = result;
 
@@ -59,6 +59,18 @@ it('setSetting sets the setting', () => {
 	});
 
 	expect(app.get('name')).toStrictEqual('new value');
+});
+
+it('app.set sets the value', () => {
+	const { result } = renderHook(() => useSetting(app, 'name'));
+
+	act(() => {
+		app.set('name', 'new value');
+	});
+
+	const { current:[setting] } = result;
+
+	expect(setting).toStrictEqual('new value');
 });
 
 it('setSetting affects other instances', () => {

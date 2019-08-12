@@ -1,12 +1,11 @@
 import { useCallback, useDebugValue, useEffect } from 'react';
 
 import useSetting from './use-setting';
+import { HAS_ATTEMPTED_AUTHENTICATION, IS_AUTHENTICATED } from './constants';
 import { useEventEmitter } from './hooks';
 
 function useAuthentication(app) {
-	const [isAuthenticated, setIsAuthenticated] = useSetting(app, 'isAuthenticated', null);
-
-	useDebugValue(isAuthenticated);
+	const [isAuthenticated, setIsAuthenticated] = useSetting(app, IS_AUTHENTICATED, null);
 
 	useEffect(() => {
 		async function checkStorage() {
@@ -23,23 +22,31 @@ function useAuthentication(app) {
 			setIsAuthenticated(value);
 		}
 
-		if (!app.get('hasAttemptedAuthentication')) {
-			app.set('hasAttemptedAuthentication', true);
-
-			checkStorage();
+		if (app.get(HAS_ATTEMPTED_AUTHENTICATION)) {
+			return;
 		}
+		app.set(HAS_ATTEMPTED_AUTHENTICATION, true);
+
+		checkStorage();
 	}, [app, setIsAuthenticated]);
 
-	const setIsAuthenticatedTrue = useCallback(() => {
-		setIsAuthenticated(true);
-	}, [setIsAuthenticated]);
+	useEventEmitter(
+		app,
+		'authenticated',
+		useCallback(() => {
+			setIsAuthenticated(true);
+		}, [setIsAuthenticated])
+	);
 
-	const setIsAuthenticatedFalse = useCallback(() => {
-		setIsAuthenticated(false);
-	}, [setIsAuthenticated]);
+	useEventEmitter(
+		app,
+		'logout',
+		useCallback(() => {
+			setIsAuthenticated(false);
+		}, [setIsAuthenticated])
+	);
 
-	useEventEmitter(app, 'authenticated', setIsAuthenticatedTrue);
-	useEventEmitter(app, 'logout', setIsAuthenticatedFalse);
+	useDebugValue(isAuthenticated);
 
 	return isAuthenticated;
 }
