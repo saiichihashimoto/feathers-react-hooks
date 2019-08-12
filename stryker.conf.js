@@ -18,7 +18,7 @@ module.exports = (config) => {
 		thresholds:       {
 			high:  80,
 			low:   60,
-			break: 92.49,
+			break: 100,
 		},
 	});
 };

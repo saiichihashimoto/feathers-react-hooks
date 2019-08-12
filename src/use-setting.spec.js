@@ -16,43 +16,74 @@ afterEach(() => {
 
 it('uses default value', () => {
 	const { result } = renderHook(() => useSetting(app, 'name', 'default value'));
-	const { current:[setting] } = result;
+	const { current: [setting] } = result;
 
 	expect(setting).toStrictEqual('default value');
 });
 
 it('uses default value as function', () => {
 	const { result } = renderHook(() => useSetting(app, 'name', () => 'default value'));
-	const { current:[setting] } = result;
+	const { current: [setting] } = result;
 
 	expect(setting).toStrictEqual('default value');
 });
 
-it('uses previous setting value', () => {
+it('returns previous setting value', () => {
 	app.set('name', 'previous value');
 
 	const { result } = renderHook(() => useSetting(app, 'name'));
-	const { current:[setting] } = result;
+	const { current: [setting] } = result;
 
 	expect(setting).toStrictEqual('previous value');
 });
 
-it('setSetting sets the value', () => {
-	const { result } = renderHook(() => useSetting(app, 'name'));
-	const { current:[, setSetting] } = result;
+it('returns value of changed app prop', () => {
+	const { result, rerender } = renderHook(() => useSetting(app, 'name'));
+
+	app = feathers();
+	rerender();
+	const { current: [, setSetting] } = result;
 
 	act(() => {
 		setSetting('new value');
 	});
 
-	const { current:[setting] } = result;
+	const { current: [setting] } = result;
 
 	expect(setting).toStrictEqual('new value');
 });
 
-it('setSetting sets the setting', () => {
+it('returns same value as previous instances', () => {
 	const { result } = renderHook(() => useSetting(app, 'name'));
-	const { current:[, setSetting] } = result;
+	const { current: [, setSetting] } = result;
+
+	const { result: result2 } = renderHook(() => useSetting(app, 'name'));
+
+	act(() => {
+		setSetting('new value');
+	});
+
+	const { current: [setting2] } = result2;
+
+	expect(setting2).toStrictEqual('new value');
+});
+
+it('sets the value', () => {
+	const { result } = renderHook(() => useSetting(app, 'name'));
+	const { current: [, setSetting] } = result;
+
+	act(() => {
+		setSetting('new value');
+	});
+
+	const { current: [setting] } = result;
+
+	expect(setting).toStrictEqual('new value');
+});
+
+it('sets the setting', () => {
+	const { result } = renderHook(() => useSetting(app, 'name'));
+	const { current: [, setSetting] } = result;
 
 	act(() => {
 		setSetting('new value');
@@ -61,36 +92,21 @@ it('setSetting sets the setting', () => {
 	expect(app.get('name')).toStrictEqual('new value');
 });
 
-it('app.set sets the value', () => {
+it('sets the value with `app.set`', () => {
 	const { result } = renderHook(() => useSetting(app, 'name'));
 
 	act(() => {
 		app.set('name', 'new value');
 	});
 
-	const { current:[setting] } = result;
+	const { current: [setting] } = result;
 
 	expect(setting).toStrictEqual('new value');
 });
 
-it('setSetting affects other instances', () => {
-	const { result } = renderHook(() => useSetting(app, 'name'));
-	const { current:[, setSetting] } = result;
-
-	const { result: result2 } = renderHook(() => useSetting(app, 'name'));
-
-	act(() => {
-		setSetting('new value');
-	});
-
-	const { current:[setting2] } = result2;
-
-	expect(setting2).toStrictEqual('new value');
-});
-
 it('has separate settings per app', () => {
 	const { result } = renderHook(() => useSetting(app, 'name'));
-	const { current:[, setSetting] } = result;
+	const { current: [, setSetting] } = result;
 
 	const otherApp = feathers();
 	const { result: result2 } = renderHook(() => useSetting(otherApp, 'name'));
@@ -99,25 +115,9 @@ it('has separate settings per app', () => {
 		setSetting('new value');
 	});
 
-	const { current:[setting2] } = result2;
+	const { current: [setting2] } = result2;
 
 	expect(setting2).not.toStrictEqual('new value');
-});
-
-it('handles app changing', () => {
-	const { result, rerender } = renderHook(() => useSetting(app, 'name'));
-
-	app = feathers();
-	rerender();
-	const { current:[, setSetting] } = result;
-
-	act(() => {
-		setSetting('new value');
-	});
-
-	const { current:[setting] } = result;
-
-	expect(setting).toStrictEqual('new value');
 });
 
 it('wraps app.set exactly once for each app', () => {
@@ -146,7 +146,7 @@ it('useDebugValue', () => {
 	jest.spyOn(React, 'useDebugValue');
 
 	const { result } = renderHook(() => useSetting(app, 'name', 'default value'));
-	const { current:[, setSetting] } = result;
+	const { current: [, setSetting] } = result;
 
 	expect(React.useDebugValue).toHaveBeenCalledWith('default value');
 
