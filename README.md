@@ -15,8 +15,8 @@ npm install --save feathers-react-hooks
 
 # Hooks
 
-- [`useAuthentication`](#useAuthentication) &mdash; tracks authentication status. _calls [`app.authenticate()`](https://docs.feathersjs.com/api/authentication/client.html#appauthenticate)_
-- [`useSetting`](#useAuthentication) &mdash; tracks an application setting.
+- [`useAuthentication`](#useauthentication) &mdash; tracks authentication status. _calls [`app.authenticate()`](https://docs.feathersjs.com/api/authentication/client.html#appauthenticate)_
+- [`useSetting`](#useauthentication) &mdash; tracks an application setting.
 
 ## useAuthentication
 
