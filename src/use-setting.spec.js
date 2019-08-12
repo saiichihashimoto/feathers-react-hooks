@@ -104,6 +104,22 @@ it('has separate settings per app', () => {
 	expect(setting2).not.toStrictEqual('new value');
 });
 
+it('handles app changing', () => {
+	const { result, rerender } = renderHook(() => useSetting(app, 'name'));
+
+	app = feathers();
+	rerender();
+	const { current:[, setSetting] } = result;
+
+	act(() => {
+		setSetting('new value');
+	});
+
+	const { current:[setting] } = result;
+
+	expect(setting).toStrictEqual('new value');
+});
+
 it('useDebugValue', () => {
 	jest.spyOn(React, 'useDebugValue');
 
