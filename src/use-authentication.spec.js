@@ -16,7 +16,7 @@ afterEach(() => {
 	jest.resetAllMocks();
 });
 
-it('is initially `null`', () => {
+it('returns `null` initially', () => {
 	app.authenticate = jest.fn(() => new Promise(() => {}));
 	const { result } = renderHook(() => useAuthentication(app));
 	const { current: isAuthenticated } = result;
@@ -24,7 +24,7 @@ it('is initially `null`', () => {
 	expect(isAuthenticated).toBeNull();
 });
 
-it('is `true` after successful authenticate', async () => {
+it('returns `true` after successful authenticate', async () => {
 	app.authenticate = jest.fn(() => Promise.resolve());
 	const { result, waitForNextUpdate } = renderHook(() => useAuthentication(app));
 
@@ -35,7 +35,7 @@ it('is `true` after successful authenticate', async () => {
 	expect(isAuthenticated).toBe(true);
 });
 
-it('is `false` after failed authenticate', async () => {
+it('returns `false` after failed authenticate', async () => {
 	app.authenticate = jest.fn(() => Promise.reject());
 	const { result, waitForNextUpdate } = renderHook(() => useAuthentication(app));
 
@@ -46,14 +46,7 @@ it('is `false` after failed authenticate', async () => {
 	expect(isAuthenticated).toBe(false);
 });
 
-it('only calls authenticate once', () => {
-	renderHook(() => useAuthentication(app));
-	renderHook(() => useAuthentication(app));
-
-	expect(app.authenticate).toHaveBeenCalledTimes(1);
-});
-
-it('remembers value from previous instances', async () => {
+it('returns same value as previous instances', async () => {
 	app.authenticate = jest.fn(() => Promise.resolve());
 	const { waitForNextUpdate } = renderHook(() => useAuthentication(app));
 
@@ -65,7 +58,31 @@ it('remembers value from previous instances', async () => {
 	expect(isAuthenticated).toBe(true);
 });
 
-it('responds to being authenticated', async () => {
+it('authenticates only once', () => {
+	renderHook(() => useAuthentication(app));
+	renderHook(() => useAuthentication(app));
+
+	expect(app.authenticate).toHaveBeenCalledTimes(1);
+});
+
+it('reauthenticates with changed app prop', async () => {
+	app.authenticate = jest.fn(() => Promise.reject());
+	const { result, rerender, waitForNextUpdate } = renderHook(() => useAuthentication(app));
+
+	await waitForNextUpdate();
+
+	app = feathers();
+	app.authenticate = jest.fn(() => Promise.resolve());
+	rerender();
+
+	await waitForNextUpdate();
+
+	const { current: isAuthenticated } = result;
+
+	expect(isAuthenticated).toBe(true);
+});
+
+it('responds to "authenticated"', async () => {
 	app.authenticate = jest.fn(() => Promise.reject());
 	const { result, waitForNextUpdate } = renderHook(() => useAuthentication(app));
 
@@ -80,9 +97,47 @@ it('responds to being authenticated', async () => {
 	expect(isAuthenticated).toBe(true);
 });
 
-it('responds to logging out', async () => {
+it('responds to "authenticated" with changed app prop', async () => {
+	app.authenticate = jest.fn(() => Promise.reject());
+	const { result, rerender, waitForNextUpdate } = renderHook(() => useAuthentication(app));
+
+	app = feathers();
+	app.authenticate = jest.fn(() => Promise.reject());
+	rerender();
+
+	await waitForNextUpdate();
+
+	act(() => {
+		app.emit('authenticated');
+	});
+
+	const { current: isAuthenticated } = result;
+
+	expect(isAuthenticated).toBe(true);
+});
+
+it('responds to "logout"', async () => {
 	app.authenticate = jest.fn(() => Promise.resolve());
 	const { result, waitForNextUpdate } = renderHook(() => useAuthentication(app));
+
+	await waitForNextUpdate();
+
+	act(() => {
+		app.emit('logout');
+	});
+
+	const { current: isAuthenticated } = result;
+
+	expect(isAuthenticated).toBe(false);
+});
+
+it('responds to "logout" with new app props', async () => {
+	app.authenticate = jest.fn(() => Promise.resolve());
+	const { result, rerender, waitForNextUpdate } = renderHook(() => useAuthentication(app));
+
+	app = feathers();
+	app.authenticate = jest.fn(() => Promise.resolve());
+	rerender();
 
 	await waitForNextUpdate();
 
