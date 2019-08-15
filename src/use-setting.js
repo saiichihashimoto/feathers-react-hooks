@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useDebugValue, useState } from 'react';
+import useEventEmitter from 'use-event-emitter';
 
 import { HAS_BEEN_WRAPPED, SETTING_CHANGED } from './constants';
-import { useEventEmitter } from './hooks';
 
 function wrapSet(app) {
 	const wrappedSet = app.set.bind(app);

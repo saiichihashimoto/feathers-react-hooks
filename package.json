@@ -36,6 +36,9 @@
   "jest": {
     "testEnvironment": "node"
   },
+  "dependencies": {
+    "use-event-emitter": "1.0.0"
+  },
   "devDependencies": {
     "@babel/cli": "7.5.5",
     "@babel/core": "7.5.5",
