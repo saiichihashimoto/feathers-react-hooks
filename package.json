@@ -55,7 +55,7 @@
     "jest": "24.8.0",
     "lint-my-app": "3.7.15",
     "react": "16.10.0",
-    "react-test-renderer": "16.9.0"
+    "react-test-renderer": "16.10.0"
   },
   "peerDependencies": {
     "react": "^16.8.0"
