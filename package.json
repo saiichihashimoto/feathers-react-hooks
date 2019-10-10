@@ -42,7 +42,7 @@
   "devDependencies": {
     "@babel/cli": "7.6.4",
     "@babel/core": "7.6.4",
-    "@babel/preset-env": "7.6.2",
+    "@babel/preset-env": "7.6.3",
     "@feathersjs/feathers": "4.3.0",
     "@stryker-mutator/babel-transpiler": "2.1.0",
     "@stryker-mutator/core": "2.1.0",
