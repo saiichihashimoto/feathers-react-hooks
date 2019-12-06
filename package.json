@@ -40,7 +40,7 @@
     "use-event-emitter": "1.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "7.7.4",
+    "@babel/cli": "7.7.5",
     "@babel/core": "7.7.4",
     "@babel/preset-env": "7.7.4",
     "@feathersjs/feathers": "4.3.10",
